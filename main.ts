@@ -108,9 +108,10 @@ function processResults(results: any) {
     const h = drawingCanvas.height;
 
     // MediaPipe web outputs landmarks.x, landmarks.y in normalized coordinates
-    // However, the video feed is horizontally flipped in CSS.
-    // To match the drawing with the flipped video, we need to invert the x coordinate:
-    const ix = (1 - lm[8].x) * w;
+    // When the output canvas is rendered, it is flipped horizontally via scale(-1, 1).
+    // Therefore, we MUST NOT flip the coordinates here, otherwise they will be flipped twice
+    // and draw on the opposite side of the screen.
+    const ix = lm[8].x * w;
     const iy = lm[8].y * h;
 
     if (smooth_x === null || smooth_y === null) {
