@@ -22,7 +22,7 @@
   "homepage": "https://github.com/Surya123-max525/news#readme",
   "devDependencies": {
     "typescript": "^6.0.3",
-    "vite": "^8.0.10"
+    "vite": "^7.3.2"
   },
   "dependencies": {
     "@mediapipe/tasks-vision": "^0.10.34"
