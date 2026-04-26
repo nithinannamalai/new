@@ -108,10 +108,10 @@ function processResults(results: any) {
     const h = drawingCanvas.height;
 
     // MediaPipe web outputs landmarks.x, landmarks.y in normalized coordinates
-    // When the output canvas is rendered, it is flipped horizontally via scale(-1, 1).
-    // Therefore, we MUST NOT flip the coordinates here, otherwise they will be flipped twice
-    // and draw on the opposite side of the screen.
-    const ix = lm[8].x * w;
+    // MediaPipe web outputs landmarks.x, landmarks.y in normalized coordinates
+    // However, the video feed is horizontally flipped in CSS/canvas.
+    // To match the drawing with the flipped video, we need to invert the x coordinate:
+    const ix = (1 - lm[8].x) * w;
     const iy = lm[8].y * h;
 
     if (smooth_x === null || smooth_y === null) {
@@ -142,7 +142,7 @@ function processResults(results: any) {
     
     const total_fingers = [index_up, middle_up, ring_up, pinky_up, thumb_up].filter(Boolean).length;
 
-    if (total_fingers === 5) {
+    if (total_fingers >= 4) {
       clear_frames++;
       if (clear_frames > 15) {
         clearMode = true;
@@ -152,7 +152,7 @@ function processResults(results: any) {
       clear_frames = 0;
       if (index_up && middle_up && !ring_up && !pinky_up) {
         pauseMode = true;
-      } else if (index_up) {
+      } else if (index_up && !middle_up && !ring_up && !pinky_up) {
         drawMode = true;
       }
     }
